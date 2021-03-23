@@ -4,7 +4,7 @@ import pandas as pd
 from scipy import signal, interpolate
 
 
-for i in [3, 4]:
+for i in range(10):
     position = r'C:\Users\gabrielle\Desktop\Université\Session 4\Optique (lab)\oximetre\F000{}CH1.CSV'.format(i)
     data = np.array(pd.read_csv(position, usecols=[3, 4])).transpose()
     temps = data[0][600:2000]
@@ -29,47 +29,47 @@ for i in [3, 4]:
             # ROUGE
             if data[1][j+10] - data[1][j] > 2:                  # Pour séparer rouge et infrarouge
                 try:
-                    s_temps = np.array(data[0][j:j+500])        # 2 secondes = 500 éléments
-                    s_signal = np.array(data[1][j:j+500])
+                    s_temps = np.array(data[0][j:j+500])        # Crée des sous-arrays
+                    s_signal = np.array(data[1][j:j+500])       # 2 secondes = 500 éléments
 
                     s_temps = s_temps[20:]                      # coupe les débuts louches
                     s_signal = s_signal[20:]
 
                     # max et min 
-                    max_loc = np.amax(s_signal)
+                    max_loc = np.amax(s_signal)                 # Trouve des max et les min de chaque sous-array
                     r_max.append(max_loc)
 
                     min_loc = np.amin(s_signal)
                     r_min.append(min_loc)
 
-                    print(r_min, r_max)
-
                     # frequence cardiaque
                     spl = interpolate.UnivariateSpline(s_temps, s_signal)       # "filtre"
                     spl.set_smoothing_factor(0.2)
 
-                    peaks, _ = signal.find_peaks(spl(s_temps), distance=50)
+                    peaks, _ = signal.find_peaks(spl(s_temps), distance=50)     # trouve les max
+                    p_temps = s_temps[peaks]                                    # matrice avec seulement les max, donc écart entre deux max = un pouls
 
-                    p_temps = s_temps[peaks]
                     periode = []
-
-                    for j in range(1, p_temps.size):
-                        intervalle = p_temps[j] - p_temps[j-1]
+                    for k in range(1, p_temps.size):
+                        intervalle = p_temps[k] - p_temps[k-1]
                         periode.append(intervalle)
 
-                    periode = np.array(periode)
-                    freq_card.append(60 / periode)      # fréquence cardiaque en bpm
+                    periode = np.array(periode)         # périodes, un array
+                    freqs_card = 60 / periode           # array des fréquences calulées dans ce sous-array
+                    #print(freqs_card)
+                    freq_card.append(np.mean(freqs_card))       #fait une moyenne pour ce sous-array (fréquence en bpm)
 
-                    # print(freq_card)
+                    #print("freq_card: ", freq_card)
 
                 except IndexError:
+                    #j += 2
                     continue
                 else:
-                    plt.plot(s_temps, s_signal)
+                    """plt.plot(s_temps, s_signal)
                     plt.plot(s_temps, spl(s_temps))
-                    plt.plot(s_temps[peaks], s_signal[peaks], 'rx')
-                    plt.title('essai {}, max'.format(i))
-                    plt.show()
+                    #plt.plot(s_temps[peaks], s_signal[peaks], 'rx')
+                    plt.title('essai {}, rouge'.format(i))
+                    plt.show()"""
 
                 j += 10
 
@@ -90,11 +90,12 @@ for i in [3, 4]:
                     ir_min.append(min_loc)
 
                 except IndexError:
+                    #j += 2
                     continue
                 else:
-                    plt.plot(s_temps, s_signal)
-                    plt.title('essai {}, min'.format(i))
-                    plt.show()
+                    """plt.plot(s_temps, s_signal)
+                    plt.title('essai {}, infrarouge'.format(i))
+                    plt.show()"""
 
                 j += 10
             
@@ -103,16 +104,18 @@ for i in [3, 4]:
         except IndexError:
             break
 
-    frq_moy = np.mean(np.array(freq_card))
+    frq_moy = np.nanmean(np.array(freq_card))
+    #print(frq_moy)
+    ir_max = np.nanmean(np.array(ir_max))
+    ir_min = np.nanmean(np.array(ir_min))
+    r_max = np.nanmean(np.array(r_max))
+    r_min = np.nanmean(np.array(r_min))
 
-    ir_max = np.mean(np.array(ir_max))
-    ir_min = np.mean(np.array(ir_min))
-    r_max = np.mean(np.array(r_max))
-    r_min = np.mean(np.array(r_min))
+    #print(ir_max, ir_min, freq_card)
 
     ratio = np.log(r_min/r_max)/np.log(ir_min/ir_max)
     taux_ox = 0.81 - 0.18*ratio/(0.81 - 0.08 + (0.29 - 0.18) * ratio)
 
-    print('Essai {}'.format(i))
-    print("Taux d'oxygénation: {}%".format(taux_ox))
+    print('    Essai {}'.format(i))
+    print("Taux d'oxygénation: {}%".format(taux_ox*100))
     print("Fréquence cardiaque: {} bpm".format(frq_moy))
