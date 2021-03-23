@@ -35,13 +35,6 @@ for i in range(10):
                     s_temps = s_temps[20:]                      # coupe les débuts louches
                     s_signal = s_signal[20:]
 
-                    # max et min 
-                    max_loc = np.amax(s_signal)                 # Trouve des max et les min de chaque sous-array
-                    r_max.append(max_loc)
-
-                    min_loc = np.amin(s_signal)
-                    r_min.append(min_loc)
-
                     # frequence cardiaque
                     spl = interpolate.UnivariateSpline(s_temps, s_signal)       # "filtre"
                     spl.set_smoothing_factor(0.2)
@@ -56,10 +49,14 @@ for i in range(10):
 
                     periode = np.array(periode)         # périodes, un array
                     freqs_card = 60 / periode           # array des fréquences calulées dans ce sous-array
-                    #print(freqs_card)
                     freq_card.append(np.mean(freqs_card))       #fait une moyenne pour ce sous-array (fréquence en bpm)
 
-                    #print("freq_card: ", freq_card)
+                    # max et min 
+                    max_loc = np.amax(spl(s_temps))                 # Trouve des max et les min de chaque sous-array
+                    r_max.append(max_loc)
+
+                    min_loc = np.amin(spl(s_temps))
+                    r_min.append(min_loc)
 
                 except IndexError:
                     #j += 2
