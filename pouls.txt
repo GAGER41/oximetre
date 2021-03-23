@@ -1,0 +1,20 @@
+  int i;
+  for (i = 0 ; i < 1999 ; i ++) { // on veut sauver 2000 données
+    myArray[i] = analogRead(PHOT);
+    delay(5); //on a un délai de 5 ms entre chaque mesure, comme ça on sait quand chaque mesure a été prise. Le temps total d'échantillonage est 10 s
+  }
+  int x;
+  int time_max_old = 0;
+  int time_max_now = 0;
+  int maxima[1];
+  int count = 0;
+  for (x = 1; x < 1998 ; x++) {
+    float delta = 0.1; // à ajuster
+    if ((myArray[x] - myArray[x-1] > delta )  &&  (myArray[x] - myArray[x+1] > delta)) {
+      time_max_old = time_max_now;
+      time_max_now = x * 5; // x5 pour avoir des ms
+      maxima[count] = time_max_now;
+      count++;
+    }
+  }
+  //float mean_time_pulse = 
