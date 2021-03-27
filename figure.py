@@ -12,14 +12,19 @@ pouls_c = data[2]
 taux_e = data[3]
 pouls_e = data[4]
 
+# figure taux
+
 f = plt.figure()
 plt.plot(essais, taux_c, "bo", label="oximètre commercial")
 plt.plot(essais, taux_e, "rx", label="résultats expérimentaux")
 plt.legend()
+plt.errorbar(essais, taux_e, yerr=30, mec="red", marker="x", fmt=' ')
 plt.xlabel("Essais")
 plt.ylabel("Taux d'oxygénation (%)")
 plt.show()
 f.savefig("taux.png", bbox_inches='tight',dpi=600)
+
+# figure pouls
 
 g = plt.figure()
 plt.plot(essais, pouls_c, "bo", label="oximètre commercial")
@@ -27,5 +32,5 @@ plt.plot(essais, pouls_e, "rx", label="résultats expérimentaux")
 plt.legend()
 plt.xlabel("Essais")
 plt.ylabel("Pouls (bpm)")
-plt.show()
-g.savefig("pouls.png", bbox_inches='tight',dpi=600)
+#plt.show()
+#g.savefig("pouls.png", bbox_inches='tight',dpi=600)

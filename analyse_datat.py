@@ -108,7 +108,8 @@ for i in range(10):
     r_max = np.nanmean(np.array(r_max))
     r_min = np.nanmean(np.array(r_min))
 
-    #print(ir_max, ir_min, freq_card)
+    if i == 4:
+        print(ir_max, ir_min, r_max, r_min)
 
     ratio = np.log(r_min/r_max)/np.log(ir_min/ir_max)
     taux_ox = 0.81 - 0.18*ratio/(0.81 - 0.08 + (0.29 - 0.18) * ratio)
