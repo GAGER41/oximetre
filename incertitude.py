@@ -13,8 +13,13 @@ import pandas as pd
 position = r'C:\Users\gabrielle\Desktop\Université\Session 4\Optique (lab)\oximetre\F0004CH1.CSV'
 data = np.array(pd.read_csv(position, usecols=[3, 4])).transpose()
 
-#plt.plot(data[0], data[1])
-#plt.show()
+f = plt.figure()
+
+plt.plot(data[0], data[1])
+plt.xlabel("temps (s)")
+plt.ylabel("intensité du signal")
+plt.show()
+f.savefig("ex_data.png", bbox_inches='tight',dpi=600)
 
 # r_max
 
@@ -40,9 +45,9 @@ ir_min_max = 0.64
 ir_min_min = 0.62
 ir_min_rel = 0.02/0.63
 
-print(ir_max_rel, ir_min_rel, r_max_rel, r_min_rel)
+#print(ir_max_rel, ir_min_rel, r_max_rel, r_min_rel)
 
 ratio = np.log(r_min_rel+r_max_rel)/np.log(ir_min_rel+ir_max_rel)
 taux_ox_incert = 0.81 - 0.18*ratio/(0.81 - 0.08 + (0.29 - 0.18) * ratio)
 
-print(taux_ox_incert*69)
+#print(taux_ox_incert*69)

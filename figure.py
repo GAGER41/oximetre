@@ -18,11 +18,11 @@ f = plt.figure()
 plt.plot(essais, taux_c, "bo", label="oximètre commercial")
 plt.plot(essais, taux_e, "rx", label="résultats expérimentaux")
 plt.legend()
-plt.errorbar(essais, taux_e, yerr=30, mec="red", marker="x", fmt=' ')
+#plt.errorbar(essais, taux_e, yerr=30, mec="red", marker="x", fmt=' ')
 plt.xlabel("Essais")
 plt.ylabel("Taux d'oxygénation (%)")
 plt.show()
-f.savefig("taux.png", bbox_inches='tight',dpi=600)
+#f.savefig("taux.png", bbox_inches='tight',dpi=600)
 
 # figure pouls
 
